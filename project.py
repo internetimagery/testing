@@ -13,6 +13,7 @@ class Project(config.Config):
     def new(s):
         """ Set up new project information """
         s.put("studio", "name", "pixar")
+        s.put("init", "save_dir", "/$FILM/$TREE/$SCENE/$SHOT")
         return s
 
 Project = Project() # Single shared project class
