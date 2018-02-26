@@ -15,26 +15,32 @@ class DB(tinydb.TinyDB):
 
 
 class Entity(object):
-    def __init__(s, db, doc=None):
-        s.db = db
-        s.doc = doc or {}
-        s.id = None if doc is None else doc.doc_id
-    def _update(s, key, value):
-        s.doc["name"] = value
-        if s.id is None:
-            s.id = s.db.insert({"name":value}, doc_id=s.doc.doc_id)
-        s.db.update({"name":value}, doc_id=s.doc.doc_id)
+    def __init__(s, type, name=""):
+        s._name = name
+        s._type = type
+        s._doc = {}
+        s._id = None
+
+    def _load_doc(s, doc):
+        s._id = doc.doc_id
+        s.name = doc.get("_name", "")
+        s._type = doc.get("_type", "")
+
+    def insert(s, db):
+        s._id = db.insert(s.doc)
+
+    def update(s, db):
+        db.update(s.doc, doc_id=s._id)
+
+    @property
+    def type(s):
+        return s._type
+
     def name():
         def fget(s):
-            return s.doc.get("name", "")
+            return s._name
         def fset(s, value):
-            s._update("name", value)
+            s._name = value
+            s.doc["_name"] = value
         return locals()
     name = property(**name())
-    def type():
-        def fget(s):
-            return s.doc.get("type", "")
-        def fset(s, value):
-            s._update("type", value)
-        return locals()
-    type = property(**name())
