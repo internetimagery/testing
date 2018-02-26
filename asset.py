@@ -3,15 +3,23 @@ from __future__ import print_function
 import os.path
 import tinydb
 
-ROOT = os.path.join(os.path.dirname(__file__), "DB_Test.db")
+# ROOT = os.path.join(os.path.dirname(__file__), "DB_Test.db")
+#
+# db = tinydb.TinyDB(ROOT, indent=4)
+# # db.insert({"one":"two","Three":"four"})
+# print(db.search(tinydb.where("one") == "two"))
+# doc = db.get(tinydb.where("one") == "two")
+# print(type(doc))
 
-db = tinydb.TinyDB(ROOT, indent=4)
-# db.insert({"one":"two","Three":"four"})
-print(db.search(tinydb.where("one") == "two"))
-doc = db.get(tinydb.where("one") == "two")
-print(type(doc))
 
 class DB(tinydb.TinyDB):
+    def _load_type(s, type, doc):
+        elem = TYPES.get(doc["_type"], Entity)("")
+        elem._load_doc(doc)
+        return elem
+        
+
+
 
 
 class Entity(object):
@@ -44,3 +52,10 @@ class Entity(object):
             s.doc["_name"] = value
         return locals()
     name = property(**name())
+
+class Asset(Entity):
+    pass
+
+TYPES = {
+    "asset": Asset
+}
