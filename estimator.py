@@ -16,12 +16,14 @@ os.mkdir(temp)
 
 def input_fn():
     # Generate data
-    vals = [float(random.randint(0,9)) for _ in range(500)]
+    vals = [float(random.randint(0,20)) for _ in range(800)]
     compare = [a+3 for a in vals]
     return {"train": vals}, compare
 
 def predict_fn():
-    return {"train": [5]}
+    pred = 15
+    print("predicted:", pred+3)
+    return {"train": [pred]}
 
 def main():
 
@@ -41,7 +43,7 @@ def main():
     estimator.train(input_fn=input_fn, steps=1000)
     # print({a: estimator.get_variable_value(a) for a in estimator.get_variable_names()})
     print("evaluate", estimator.evaluate(input_fn=input_fn, steps=100))
-    print("expected 3, got", estimator.predict(input_fn=predict_fn).__next__()["predictions"][0])
+    print("got:", estimator.predict(input_fn=predict_fn).__next__()["predictions"][0])
 
 
 if __name__ == '__main__':
