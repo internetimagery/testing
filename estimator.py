@@ -14,9 +14,11 @@ if os.path.exists(temp):
     shutil.rmtree(temp)
 os.mkdir(temp)
 
+DATA_LEN = 800
+
 def input_fn():
     # Generate data
-    vals = [float(random.randint(0,20)) for _ in range(800)]
+    vals = [float(random.randint(0,20)) for _ in range(DATA_LEN)]
     compare = [a+3 for a in vals]
     return {"train": vals}, compare
 
@@ -37,7 +39,7 @@ def main():
 
     estimator = tf.estimator.DNNRegressor(
         feature_columns=[train],
-        hidden_units=[1024,512,256],
+        hidden_units=[DATA_LEN],
         model_dir=temp)
 
     estimator.train(input_fn=input_fn, steps=1000)
